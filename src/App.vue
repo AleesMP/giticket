@@ -29,11 +29,10 @@ const submit = async () => {
 
   if (error) {
     console.log(error)
+  } else {
+    console.log('Se ha creado la siguiente movie -> ', data)
   }
-  
-  console.log('Se ha creado la siguiente movie -> ', data)
 }
-
 
 const update = async (movie) => {
 
@@ -46,10 +45,26 @@ const update = async (movie) => {
 
   if (error) {
     console.log(error)
+  } else {
+    console.log('Se ha actualizado la siguiente movie -> ', data)
+    selectedMovie.value = null
   }
+}
 
-  console.log('Se ha actualizado la siguiente movie -> ', data)
-  selectedMovie.value = null
+const deleteMovieById = async (id) => {
+
+  // Eliminamos la película de la bd
+  const { error } = await supabase
+    .from('movies')
+    .delete()
+    .eq('id', id)
+
+  if (error) {
+    console.log(error)
+  } else {
+    console.log('Se ha eliminado la movie')
+    selectedMovie.value = null
+  }
 }
 
 </script>
@@ -101,7 +116,7 @@ const update = async (movie) => {
       <div v-else>No hay ninguna película.</div>
     </div>
     <div>
-      <h1>Editar una pelicula</h1>
+      <h1>Editar o eliminar una pelicula</h1>
       <div>
         <label for="selectedMovie">Selecciona una película</label>
         <select name="selectedMovie" id="selectedMovie" v-model="selectedMovie">
@@ -125,6 +140,7 @@ const update = async (movie) => {
             <textarea v-model="selectedMovie.synopsis" name="selectedMovieSynopsis"></textarea>
           </div>
           <button @click="update(selectedMovie)">Actualizar</button>
+          <button @click="deleteMovieById(selectedMovie.id)">Eliminar</button>
         </div>
       </div>
     </div>
