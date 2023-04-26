@@ -6,6 +6,7 @@ let titulo = ref('')
 let anio = ref()
 let genero = ref('')
 let sinopsis = ref(null)
+let selectedMovie = ref(null)
 
 let movies = ref([])
 onMounted(async () => {
@@ -32,6 +33,25 @@ const submit = async () => {
   
   console.log('Se ha creado la siguiente movie -> ', data)
 }
+
+
+const update = async (movie) => {
+
+  // Actualizamos la película con sus nuevos datos a la bd
+  const { data, error } = await supabase
+    .from('movies')
+    .update({ title: movie.title, year: movie.year, genre: movie.genre, synopsis: movie.synopsis })
+    .eq('id', movie.id)
+    .select()
+
+  if (error) {
+    console.log(error)
+  }
+
+  console.log('Se ha actualizado la siguiente movie -> ', data)
+  selectedMovie.value = null
+}
+
 </script>
 
 <template>
@@ -73,12 +93,40 @@ const submit = async () => {
           <td>{{ movie.title }}</td>
           <td>{{ movie.year }}</td>
           <td>{{ movie.genre }}</td>
-          <td>{{ movie.synapsis }}</td>
+          <td>{{ movie.synopsis }}</td>
           <td>{{ movie.created_at }}</td>
           <td>{{ movie.updated_at }}</td>
         </tr>
       </table>
       <div v-else>No hay ninguna película.</div>
+    </div>
+    <div>
+      <h1>Editar una pelicula</h1>
+      <div>
+        <label for="selectedMovie">Selecciona una película</label>
+        <select name="selectedMovie" id="selectedMovie" v-model="selectedMovie">
+          <option v-for="movie in movies" :key="movie.id" :value="movie">{{ `${movie.title} (${movie.id})` }}</option>
+        </select>
+        <div v-if="selectedMovie">
+          <div>
+            <label for="selectedMovieTitle">Título</label>
+            <input v-model="selectedMovie.title" name="selectedMovieTitle" type="text" required/>
+          </div>
+          <div>
+            <label for="selectedMovieYear">Año</label>
+            <input v-model="selectedMovie.year" name="selectedMovieYear" type="number" required />
+          </div>
+          <div>
+            <label for="selectedMovieGenre">Género</label>
+            <input v-model="selectedMovie.genre" name="selectedMovieGenre" type="text" required />
+          </div>
+          <div>
+            <label for="selectedMovieSynopsis">Sinopsis</label>
+            <textarea v-model="selectedMovie.synopsis" name="selectedMovieSynopsis"></textarea>
+          </div>
+          <button @click="update(selectedMovie)">Actualizar</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
