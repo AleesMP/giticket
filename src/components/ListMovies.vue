@@ -3,13 +3,22 @@ import { onMounted, ref } from 'vue'
 import { supabase } from '../services/supabase'
 
 let movies = ref([])
-onMounted(async () => {
-  // Recuperar las peliculas desde la bd supabase
-  const { data, error } = await supabase
+const fetchMovies = async () => {
+    const { data, error } = await supabase
     .from('movies')
     .select()
+    .order('created_at')
 
   movies.value = data
+}
+
+onMounted( () => {
+  // Recuperar las peliculas desde la bd supabase
+  fetchMovies()
+})
+
+defineExpose({
+  fetchMovies
 })
 
 </script>
@@ -36,8 +45,8 @@ onMounted(async () => {
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.year }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.genre }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.synopsis }}</td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.created_at }}</td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.updated_at }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.created_at)).toISOString() }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.updated_at)).toISOString() }}</td>
           </tr>
         </tbody>
       </table>

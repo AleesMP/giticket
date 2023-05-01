@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import { supabase } from '../services/supabase'
 import FormMovie from './FormMovie.vue'
 
+const emit = defineEmits(['createMovie'])
+
 let movie = ref({
     title : '',
     year : null,
@@ -21,6 +23,7 @@ const submit = async () => {
       console.log(error)
     } else {
       console.log('Se ha creado la siguiente movie -> ', data)
+      emit('createMovie')
     }
   }
 </script>

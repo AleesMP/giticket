@@ -6,12 +6,14 @@ import FormMovie from './FormMovie.vue';
 
 let selectedMovie = ref(null)
 let movies = ref([])
+const emit = defineEmits(['updateMovie'])
 
 onMounted(async () => {
   // Recuperar las peliculas desde la bd supabase
   const { data, error } = await supabase
     .from('movies')
     .select()
+    .order('created_at')
 
   movies.value = data
 })
@@ -20,7 +22,7 @@ const update = async (movie) => {
   // Actualizamos la película con sus nuevos datos a la bd
   const { data, error } = await supabase
     .from('movies')
-    .update({ title: movie.title, year: movie.year, genre: movie.genre, synopsis: movie.synopsis })
+    .update({ title: movie.title, year: movie.year, genre: movie.genre, synopsis: movie.synopsis, updated_at: new Date() })
     .eq('id', movie.id)
     .select()
 
@@ -29,6 +31,7 @@ const update = async (movie) => {
   } else {
     console.log('Se ha actualizado la siguiente movie -> ', data)
     resetSelectedMovie()
+    emit('updateMovie')
   }
 }
 
