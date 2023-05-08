@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+
 import CreateMovie from '../components/CreateMovie.vue'
 import ListMovies from '../components/ListMovies.vue'
 import UpdateMovies from '../components/UpdateMovies.vue'
@@ -8,7 +9,7 @@ const handleCreateMovie = () => {
   listComponent.value.fetchMovies()
 }
 
-const handleUpdateMovie = () => {
+const handleUpdateMovie = (data) => {
   listComponent.value.fetchMovies()
 }
 
