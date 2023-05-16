@@ -9,7 +9,8 @@ let movie = ref({
     title : '',
     year : null,
     genre : '',
-    synopsis : null
+    synopsis : null,
+    image : null
 })
 
 const submit = async () => {
@@ -22,10 +23,14 @@ const submit = async () => {
     if (error) {
       console.log(error)
     } else {
-      console.log('Se ha creado la siguiente movie -> ', data)
-      emit('createMovie')
+      console.log('Se ha creado la siguiente movie -> ', data[0])
+
+      let newMovie = data[0]
+      newMovie.image = movie.value.image
+      emit('createMovie', newMovie)
     }
   }
+
 </script>
 
 <template>

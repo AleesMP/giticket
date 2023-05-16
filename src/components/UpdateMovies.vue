@@ -29,9 +29,12 @@ const update = async (movie) => {
   if (error) {
     console.log(error)
   } else {
-    console.log('Se ha actualizado la siguiente movie -> ', data)
+    console.log('Se ha actualizado la siguiente movie -> ', data[0])
+
+    let newMovie = data[0]
+    newMovie.image = selectedMovie.value.image
     resetSelectedMovie()
-    emit('updateMovie')
+    emit('updateMovie', newMovie)
   }
 }
 
