@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { supabase } from './services/supabase'
 import router from './router'
+import Navbar from './components/Navbar.vue';
 
 const currentUser = ref()
 
@@ -24,6 +25,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Navbar />
   <nav class="flex gap-4 text-white">
     <router-link to="/">Home</router-link>
     <router-link v-if="currentUser" to="/admin">Admin</router-link>
