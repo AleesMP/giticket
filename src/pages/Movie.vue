@@ -1,14 +1,15 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
 import { setDefaultOptions, addDays, eachDayOfInterval, isBefore, format, formatRelative } from 'date-fns'
 import { es } from 'date-fns/locale'
-
-const supabaseStorageUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL
+import VueQrcode from '@chenfengyuan/vue-qrcode'
 
 const route = useRoute()
 const router = useRouter()
+
+const supabaseStorageUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL
 
 let movie = ref()
 
@@ -20,6 +21,7 @@ let selectedHour = ref()
 
 let booking = ref()
 let bookingEmail = ref('')
+let QRCodeUrl = computed(() => booking.value ? window.location.host + '/reservas/' + booking.value.id : null)
 
 onMounted(async () => {
     initLocale()
@@ -105,8 +107,27 @@ const bookMovie = async () => {
             console.log(error)
         } else {
             booking.value = data[0]
+
+            await setQRCodeImg()
         }
     }
+}
+const setQRCodeImg = async () => {
+    setTimeout(async () => {
+        const { data, error } = await supabase
+            .from('bookings')
+            .update({
+                qr_code_img: document.getElementById('qr-code-img').src
+            })
+            .eq('id', booking.value.id)
+            .select()
+    
+        if (error) {
+            console.log(error)
+        } else {
+            booking.value = data[0]
+        }
+    }, 1000)
 }
 
 const goBack = () => {
@@ -142,6 +163,8 @@ const goBack = () => {
                 <label for="bookingEmail">Dirección de correo electrónico</label>
                 <input class="bg-slate-600 rounded px-2 py-1" v-model="bookingEmail" name="bookingEmail" type="email" required />
             </div>
+
+            <vue-qrcode v-if="QRCodeUrl" id="qr-code-img" :value="QRCodeUrl" tag="img" class="w-64 rounded"></vue-qrcode>
 
             <button type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>
         </form>
