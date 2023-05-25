@@ -39,6 +39,14 @@ const setImage = (event) => {
       <textarea class="bg-slate-600 rounded px-2 py-1" v-model="movie.synopsis" name="synopsis"></textarea>
     </div>
     <div class="flex flex-col gap-2">
+      <label for="released_at">Fecha de lanzamiento</label>
+      <input class="bg-slate-600 rounded px-2 py-1" v-model="movie.released_at" name="released_at" type="datetime-local" required />
+    </div>
+    <div class="flex flex-col gap-2">
+      <label for="ended_at">Fecha de retiro</label>
+      <input class="bg-slate-600 rounded px-2 py-1" v-model="movie.ended_at" name="ended_at" type="datetime-local" />
+    </div>
+    <div class="flex flex-col gap-2">
       <label for="image">Imagen</label>
       <input class="bg-slate-600 rounded px-2 py-1" @change="setImage" name="image" type="file" accept="image/png, image/jpeg" required />
       <img v-if="typeof movie.image === 'string'" class="object-cover h-96 w-64" :src="supabaseStorageUrl + movie.image" :alt="'Portada de: ' + movie.title">

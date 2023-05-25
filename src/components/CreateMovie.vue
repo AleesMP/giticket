@@ -11,14 +11,23 @@ let movie = ref({
     genre : '',
     synopsis : null,
     image : null,
-    slug: ''
+    slug: '',
+    released_at: new Date(),
+    ended_at: null,
 })
 
 const submit = async () => {
     // Enviar los datos a nuestra base de datos (supabase)
     const { data, error } = await supabase
       .from('movies')
-      .insert({ title: movie.value.title, year: movie.value.year, genre: movie.value.genre, synopsis: movie.value.synopsis })
+      .insert({
+        title: movie.value.title,
+        year: movie.value.year,
+        genre: movie.value.genre,
+        synopsis: movie.value.synopsis,
+        released_at: movie.value.released_at,
+        ended_at: movie.value.ended_at,
+      })
       .select()
   
     if (error) {
