@@ -1,17 +1,19 @@
 {
-  "name": "cine",
-  "version": "0.0.0",
+  "name": "giticket",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -b deploy -d dist -m \"New Deploy\""
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@plunk/node": "^1.1.1",
     "@supabase/supabase-js": "^2.21.0",
     "date-fns": "^2.30.0",
+    "gh-pages": "^5.0.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
