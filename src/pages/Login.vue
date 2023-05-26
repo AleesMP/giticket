@@ -60,7 +60,7 @@ const login = async () => {
                 <button class="px-4 py-2 rounded font-semibold bg-slate-800 text-white" type="button" @click="login">Entrar</button>
             </div>
         </div>
-        <div class="flex flex-col gap-4">
+        <!-- <div class="flex flex-col gap-4">
             <h2 class="text-white text-2xl">Registro</h2>
             <div class="flex flex-col gap-2">
                 <label class="text-white" for="name">Nombre</label>
@@ -77,6 +77,6 @@ const login = async () => {
             <div class="flex gap-8 justify-center">
                 <button class="px-4 py-2 rounded font-semibold bg-slate-800 text-white" type="button" @click="registerUser">Registrar</button>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>

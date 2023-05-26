@@ -21,7 +21,7 @@ const setImage = (event) => {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col gap-3">
     <div class="flex flex-col gap-2">
       <label for="title">Título</label>
       <input class="bg-slate-600 rounded px-2 py-1" v-model="movie.title" name="title" type="text" required />
