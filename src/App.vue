@@ -10,10 +10,6 @@ onMounted(async () => {
     if (event == 'SIGNED_OUT') {
       router.replace({ path: '/' })
     }
-
-    if (event == 'SIGNED_IN') {
-      router.replace({ path: '/admin' })
-    }
   })
 })
 </script>

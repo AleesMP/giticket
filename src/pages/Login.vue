@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
+
+const router = useRouter()
 
 const loginForm = ref({
     email: '',
@@ -38,6 +41,7 @@ const login = async () => {
     if (error) {
         console.log(error)
     } else {
+        router.replace('/admin')
         console.log('Se ha iniciado sesión -> ', data)
     }
 }
