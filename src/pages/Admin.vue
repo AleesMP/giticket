@@ -82,8 +82,8 @@ const logout = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-8 text-white p-4">
-    <div v-if="currentUser" class="flex justify-between gap-4">
+  <div v-if="currentUser" class="flex flex-col gap-8 text-white p-4">
+    <div class="flex justify-between gap-4">
       <div>
         Bienvenido/a {{ currentUser.user_metadata.name }}
       </div>
