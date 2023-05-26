@@ -50,8 +50,7 @@ const fetchMovies = async () => {
 </script>
 
 <template>
-    <div>
-        <h1 class="text-3xl text-white">Home</h1>
+    <div class="py-8">
         <div class="flex flex-col gap-6 px-6">
             <div class="flex gap-4 justify-center">
                 <input v-model="searchText" type="text" placeholder="Buscar por título" class="rounded-md lg:w-2/12 bg-gray-100 pl-2">
@@ -63,8 +62,8 @@ const fetchMovies = async () => {
             <div class="flex flex-wrap">
                 <div v-for="movie in filteredMovies" :key="movie.id" class="flex w-1/6 p-2">
                     <a :href="movie.slug" class="flex flex-col bg-blue-300 p-3 rounded-md cursor-pointer">
-                        <div>{{ movie.title }}</div>
-                        <img :src="supabaseStorageUrl + movie.image">
+                        <img class="rounded-md" :src="supabaseStorageUrl + movie.image">
+                        <div class="text-center p-1">{{ movie.title }}</div>
                     </a>
                 </div>
             </div>

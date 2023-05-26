@@ -25,11 +25,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Navbar />
-  <nav class="flex gap-4 text-white">
-    <router-link to="/">Home</router-link>
-    <router-link v-if="currentUser" to="/admin">Admin</router-link>
-    <router-link v-else to="/login">Registrarse / Iniciar sesión</router-link>
-  </nav>
-  <router-view :currentUser="currentUser" />
+  <div>
+    <Navbar />
+    <router-view :currentUser="currentUser" />
+  </div>
 </template>
