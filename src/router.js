@@ -11,7 +11,7 @@ const routes = [
   { path: "/admin", component: Admin },
   { path: "/login", component: Login },
   { path: "/404", component: NotFound },
-  { path: "/reservas/:bookingUuid", component: Booking, name: 'BookingDetail' },
+  { path: "/reservas/:bookingUuid", component: Booking },
   { path: "/:movieSlug", component: Movie }
 ];
 

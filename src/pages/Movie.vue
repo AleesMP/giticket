@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+ import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
-import { setDefaultOptions, addDays, eachDayOfInterval, isBefore, format, formatRelative } from 'date-fns'
+import { plunk, getBody } from '../services/plunk'
+import { setDefaultOptions, addDays, eachDayOfInterval, isBefore, format, formatRelative, isEqual } from 'date-fns'
 import { es } from 'date-fns/locale'
-import VueQrcode from '@chenfengyuan/vue-qrcode'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,12 +16,12 @@ let movie = ref()
 let availableDates = ref([])
 let selectedDate = ref()
 
-let availableHours = ref([])
+let availableHours = computed(() => calculateAvailableHours(selectedDate.value))
 let selectedHour = ref()
 
 let booking = ref()
 let bookingEmail = ref('')
-let QRCodeUrl = computed(() => booking.value ? window.location.host + '/reservas/' + booking.value.id : null)
+let bookingUrl = computed(() => booking.value ? window.location.host + '/reservas/' + booking.value.id : null)
 
 onMounted(async () => {
     initLocale()
@@ -30,8 +30,7 @@ onMounted(async () => {
 
     availableDates.value = calculateAvailableDates(new Date(movie.value.released_at))
     selectedDate.value = availableDates.value[0].datetime
-
-    availableHours.value = calculateAvailableHours(selectedDate.value)
+    
     selectedHour.value = availableHours.value[0]
 })
 
@@ -69,9 +68,12 @@ const calculateAvailableDates = (releaseDate) => {
 
 const calculateAvailableHours = (selectedDate) => {
     const dayOfWeek = format(selectedDate, 'iiii')
-    const specialDaysOfWeek = ['Miércoles', 'Sábado', 'Domingo']
+    const specialDaysOfWeek = ['miércoles', 'sábado', 'domingo']
+    const availableHours = specialDaysOfWeek.includes(dayOfWeek) ? ['17:00', '18:00', '21:00'] : ['16:00', '17:00']
 
-    return specialDaysOfWeek.includes(dayOfWeek) ? ['17:00', '18:00', '21:00'] : ['16:00', '17:00']
+    selectedHour.value = availableHours[0]
+
+    return availableHours
 }
 
 const fetchMovieBySlug = async (slug) => {
@@ -94,40 +96,32 @@ const fetchMovieBySlug = async (slug) => {
 const bookMovie = async () => {
     if (bookingEmail.value) {
         const { data, error } = await supabase
-          .from('bookings')
-          .insert({
-            email: bookingEmail.value,
-            movie_id: movie.value.id,
-            selected_date: selectedDate.value,
-            selected_hour: selectedHour.value,
-          })
-        .select()
-    
+            .from('bookings')
+            .insert({
+                email: bookingEmail.value,
+                movie_id: movie.value.id,
+                selected_date: selectedDate.value,
+                selected_hour: selectedHour.value,
+            })
+            .select()
+
         if (error) {
             console.log(error)
         } else {
             booking.value = data[0]
 
-            await setQRCodeImg()
+            await plunk.emails.send({
+                to: bookingEmail.value,
+                subject: `Recibo de la reserva - ${movie.value.title}`,
+                body: getBody({
+                    movieTitle: movie.value.title,
+                    bookingDate: availableDates.value.find((dateObj) => isEqual(dateObj.datetime, selectedDate.value))?.label,
+                    bookingHour: selectedHour.value,
+                    bookingURL: bookingUrl.value
+                })
+            })
         }
     }
-}
-const setQRCodeImg = async () => {
-    setTimeout(async () => {
-        const { data, error } = await supabase
-            .from('bookings')
-            .update({
-                qr_code_img: document.getElementById('qr-code-img').src
-            })
-            .eq('id', booking.value.id)
-            .select()
-    
-        if (error) {
-            console.log(error)
-        } else {
-            booking.value = data[0]
-        }
-    }, 1000)
 }
 
 const goBack = () => {
@@ -135,36 +129,50 @@ const goBack = () => {
 }
 </script>
 <template>
-    <div v-if="movie" class="flex flex-col gap-4 text-white">
-        <div class="flex flex-col gap-4">
-            <div class="text-4xl">{{ movie.title }}</div>
-            <img class="w-64" :src="supabaseStorageUrl + movie.image" :alt="`${movie.title} - Imagen`">
-            <div class="text-2xl">{{ movie.year }} - {{ movie.genre }}</div>
-            <div class="text-4xl">{{ movie.synopsis }}</div>
+    <div v-if="movie" class="flex flex-col gap-4 p-8 text-white ">
+        <div class="text-4xl">{{ movie.title }}</div>
+        <div class="flex flex-row gap-4">
+            <img class="w-64 rounded-md" :src="supabaseStorageUrl + movie.image" :alt="`${movie.title} - Imagen`">
+            <div class="flex flex-wrap mx-2">
+                <div class="flex flex-col p-2">
+                    <div>
+                        <span>Sinopsis</span>
+                        <div class="text-2xl p-2">{{ movie.synopsis }}</div>
+                    </div>
+                    <div>
+                        <span>Año:</span>
+                        <div class="text-1xl p-2">{{ movie.year }}</div>
+                    </div>
+                    <div>
+                        <span>Género:</span>
+                        <div class="text-1xl p-2">{{ movie.genre }}</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <form class="flex flex-col p-4 border rounded border-slate-600" @submit.prevent="bookMovie">
-            <div>Reservas</div>
-            <div>
+        <form class="flex flex-col p-5 border rounded-md border-slate-600 gap-3" @submit.prevent="bookMovie">
+            <div class="flex gap-4 items-center">
                 <label for="selectedDate">Listado de días</label>
                 <select class="bg-slate-600 rounded px-2 py-1" name="selectedDate" v-model="selectedDate">
                     <option v-for="availableDate in availableDates" :key="availableDate.datetime"
                         :value="availableDate.datetime">{{ availableDate.label }}</option>
                 </select>
             </div>
-            <div>
+            <div class="flex gap-4 items-center">
                 <div>Listado de horas</div>
                 <div class="flex gap-2">
                     <div v-for="availableHour in availableHours" :key="availableHour" :value="availableHour"
-                        class="inline-flex justify-center items-center p-1.5 bg-slate-600 rounded cursor-pointer" :class="{'bg-slate-900': availableHour === selectedHour}" @click="selectedHour = availableHour">{{ availableHour }}</div>
+                        class="inline-flex justify-center items-center p-1.5 bg-slate-600 rounded cursor-pointer"
+                        :class="{ 'bg-slate-800': availableHour === selectedHour }" @click="selectedHour = availableHour">{{
+                            availableHour }}</div>
                 </div>
             </div>
-            <div>
+            <div class="flex gap-4 items-center">
                 <label for="bookingEmail">Dirección de correo electrónico</label>
-                <input class="bg-slate-600 rounded px-2 py-1" v-model="bookingEmail" name="bookingEmail" type="email" required />
+                <input class="bg-slate-600 rounded px-2 py-1" v-model="bookingEmail" name="bookingEmail" type="email"
+                    placeholder="Tu correo electrónico" required />
             </div>
-
-            <vue-qrcode v-if="QRCodeUrl" id="qr-code-img" :value="QRCodeUrl" tag="img" class="w-64 rounded"></vue-qrcode>
 
             <button type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>
         </form>
