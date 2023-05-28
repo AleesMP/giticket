@@ -53,7 +53,7 @@ const initLocale = () => {
 }
 
 const calculateAvailableDates = (releaseDate) => {
-    const MAX_DAYS = 3
+    const MAX_DAYS = 5
     const todayDate = new Date()
     const startDate = isBefore(todayDate, releaseDate) ? releaseDate : todayDate
     const endDate = addDays(startDate, MAX_DAYS)
@@ -69,7 +69,7 @@ const calculateAvailableDates = (releaseDate) => {
 const calculateAvailableHours = (selectedDate) => {
     const dayOfWeek = format(selectedDate, 'iiii')
     const specialDaysOfWeek = ['miércoles', 'sábado', 'domingo']
-    const availableHours = specialDaysOfWeek.includes(dayOfWeek) ? ['17:00', '18:00', '21:00'] : ['16:00', '17:00']
+    const availableHours = specialDaysOfWeek.includes(dayOfWeek) ? ['16:00', '18:45', '19:30', '20:45', '22:00', '23:30'] : ['16:00', '18:30', '19:45', '22:00', '22:45']
 
     selectedHour.value = availableHours[0]
 
@@ -127,6 +127,7 @@ const bookMovie = async () => {
 const goBack = () => {
     router.push('/')
 }
+
 </script>
 <template>
     <div v-if="movie" class="flex flex-col gap-4 p-8 text-white ">
@@ -150,7 +151,6 @@ const goBack = () => {
                 </div>
             </div>
         </div>
-
         <form class="flex flex-col p-5 border rounded-md border-slate-600 gap-3" @submit.prevent="bookMovie">
             <div class="flex gap-4 items-center">
                 <label for="selectedDate">Listado de días</label>
@@ -171,7 +171,7 @@ const goBack = () => {
             <div class="flex gap-4 items-center">
                 <label for="bookingEmail">Dirección de correo electrónico</label>
                 <input class="bg-slate-600 rounded px-2 py-1" v-model="bookingEmail" name="bookingEmail" type="email"
-                    placeholder="Tu correo electrónico" required />
+                    placeholder="ejemplo@ejemplo.com" required />
             </div>
 
             <button type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>

@@ -1,9 +1,8 @@
 <script setup>
 import logo from "../assets/logo.svg"
-import { onMounted, ref } from 'vue'
 import { supabase } from '../services/supabase'
 
-let currentUser = ref()
+const props = defineProps(['store'])
 
 const logout = async () => {
   const { error } = await supabase.auth.signOut()
@@ -11,39 +10,45 @@ const logout = async () => {
   if (error) {
     console.log(error)
   } else {
-    currentUser.value = null
     console.log('Se ha cerrado la sesión')
   }
 }
-
-onMounted(async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-
-  currentUser.value = user
-})
-
 </script>
 
 <template>
-    <nav>
-        <!-- desktop menu -->
-        <div class="bg-blue-600">
-            <div class="max-w-auto mx-auto px-8">
-                <div class="flex justify-between">
-                    <!-- menu -->
-                    <div class="flex space-x-4">
-                        <!-- logo -->
-                        <a href="/" class="flex items-center space-x-2 py-5">
-                            <img class="w-8 h-8 aspect-square" :src="logo" alt="Giticket Logo">
-                            <span class="text-2xl font-extrabold text-white">GITICKET</span>
-                        </a>
-                    </div>
-                    <div v-if="currentUser" class="flex items-center gap-10">
-                        <div class="text-white">{{ `${currentUser.user_metadata.name} (${currentUser.email})` }}</div>
-                        <button class="h-12 rounded font-semibold bg-orange-400 w-32 rounded text-white hover:bg-orange-300" type="button" @click="logout">Desconectar</button>
-                    </div>
+  <nav>
+    <div class="bg-blue-800">
+      <div class="max-w-auto max-h-auto mx-auto px-8">
+        <div class="flex justify-between">
+          <div class="flex space-x-4">
+            <a href="/" class="flex items-center space-x-2 py-5">
+              <img class="w-8 h-8 aspect-square" :src="logo" alt="Giticket Logo">
+              <span class="text-2xl font-extrabold text-amber-400">Giticket</span>
+            </a>
+          </div>
+          <div v-if="props.store.currentUser" class="flex items-center">
+            <div class="flex flex-wrap p-4">
+              <div class="flex justify-between p-2 bg-blue-400 px-2 rounded font-bold">
+                <div>Peliculas
+                  <a href="/" class="px-2 text-white">Dar de alta</a>
+                  <a href="/" class="px-2 text-white">Listar</a>
+                  <a href="/" class="px-2 text-white">Editar/Eliminar</a>
                 </div>
+                <div>Usuarios
+                  <a href="/" class="px-2 text-white">Registrar usuario</a>
+                  <a href="/" class="px-2 text-white">Reservas</a>
+                </div>
+              </div>
             </div>
+            <div>
+              <!-- /admin temporal para poder ir rápido -->
+              <a href="/admin" class="text-white bg-orange-300 rounded p-3">{{ `${props.store.currentUser.user_metadata.name} (${props.store.currentUser.email})` }}</a>
+              <button class="h-12 rounded font-semibold bg-orange-400 w-32 rounded text-white hover:bg-orange-500"
+                type="button" @click="logout">Desconectar</button>
+            </div>
+          </div>
         </div>
-    </nav>
+      </div>
+    </div>
+  </nav>
 </template>

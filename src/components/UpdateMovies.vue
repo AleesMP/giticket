@@ -49,7 +49,7 @@ const resetSelectedMovie = () => {
       <div class="flex flex-col gap-3">
         <label for="selectedMovie">Selecciona una película</label>
         <select class="bg-slate-600 rounded px-2 py-1" name="selectedMovie" id="selectedMovie" v-model="selectedMovie">
-          <option v-for="movie in movies" :key="movie.id" :value="movie">{{ `${movie.title} (${movie.id})` }}</option>
+          <option v-for="movie in movies" :key="movie.id" :value="movie">{{ `${movie.title}` }}</option>
         </select>
         <div class="flex flex-col gap-3" v-if="selectedMovie">
           <FormMovie v-model="selectedMovie"/>

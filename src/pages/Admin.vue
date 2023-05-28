@@ -7,15 +7,10 @@ import ListMovies from '../components/ListMovies.vue'
 import UpdateMovies from '../components/UpdateMovies.vue'
 
 const router = useRouter()
+const props = defineProps(['store'])
 
-let currentUser = ref()
-
-onMounted(async () => {
-  const { data: { user } } = await supabase.auth.getUser()
-
-  currentUser.value = user
-
-  if (!currentUser.value) {
+onMounted(() => {
+  if (!props.store.currentUser) {
     router.replace('/login')
   }
 })
@@ -70,7 +65,7 @@ const generateImageName = () => {
 </script>
 
 <template>
-  <div v-if="currentUser" class="flex flex-col gap-8 text-white p-4">
+  <div v-if="props.store.currentUser" class="flex flex-col gap-8 text-white p-4">
     <CreateMovie @createMovie="handleCreateMovie" />
     <ListMovies ref="listComponent"/>
     <UpdateMovies @updateMovie="handleUpdateMovie"/>

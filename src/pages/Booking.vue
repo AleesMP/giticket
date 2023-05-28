@@ -33,8 +33,9 @@ const fetchBookingByUuid = async (uuid) => {
 
 </script>
 <template>
-    <div v-if="booking">
-        <div class="text-white">Esta es la reserva con id: {{ booking.id }}</div>
+    <div v-if="booking" class="text-white">
+        <div>Este es el código QR que debes presentar en taquilla:</div>
         <vue-qrcode v-if="QRCodeUrl" id="qr-code-img" :value="QRCodeUrl" tag="img" class="w-64 rounded"></vue-qrcode>
+        <div>Id: {{ booking.id }}</div>
     </div>
 </template>
