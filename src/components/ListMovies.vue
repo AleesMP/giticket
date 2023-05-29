@@ -39,7 +39,7 @@ defineExpose({
 
 <template>
   <div class="flex flex-col gap-3">
-    <h1 class="text-3xl">Listado</h1>
+    <h1 class="text-3xl">Listado de películas:</h1>
     <table class="border-collapse table-auto" v-if="movies">
       <thead>
         <tr>

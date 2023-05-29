@@ -1,6 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { supabase } from '../services/supabase'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { supabase } from '../../services/supabase'
+
+const router = useRouter()
+const props = defineProps(['store'])
+
+onMounted(() => {
+  setTimeout(() => {
+    if (!props.store.currentUser) {
+      router.replace('/login')
+    }
+  }, 2000)
+})
 
 const newUser = ref({
     name: '',
@@ -24,10 +36,10 @@ const registerUser = async () => {
         console.log('Se ha registrado el usuario -> ', data)
     }
 }
-
 </script>
 
 <template>
+  <div v-if="props.store.currentUser" class="flex flex-col gap-8 text-white p-4">
     <div class="flex flex-col gap-4">
             <h2 class="text-white text-2xl">Registrar usuario</h2>
             <div class="flex flex-col gap-2">
@@ -46,4 +58,5 @@ const registerUser = async () => {
                 <button class="px-4 py-2 rounded font-semibold bg-slate-800 text-white" type="button" @click="registerUser">Registrar</button>
             </div>
         </div>
+  </div>
 </template>
