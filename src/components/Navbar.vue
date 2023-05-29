@@ -27,19 +27,6 @@ const logout = async () => {
             </a>
           </div>
           <div v-if="props.store.currentUser" class="flex items-center">
-            <div class="flex flex-wrap p-4">
-              <div class="flex justify-between p-2 bg-blue-400 px-2 rounded font-bold">
-                <div>Peliculas
-                  <a href="/" class="px-2 text-white">Dar de alta</a>
-                  <a href="/" class="px-2 text-white">Listar</a>
-                  <a href="/" class="px-2 text-white">Editar/Eliminar</a>
-                </div>
-                <div>Usuarios
-                  <a href="/" class="px-2 text-white">Registrar usuario</a>
-                  <a href="/" class="px-2 text-white">Reservas</a>
-                </div>
-              </div>
-            </div>
             <div>
               <!-- /admin temporal para poder ir rápido -->
               <a href="/admin" class="text-white bg-orange-300 rounded p-3">{{ `${props.store.currentUser.user_metadata.name} (${props.store.currentUser.email})` }}</a>
