@@ -15,7 +15,7 @@ const route = useRoute()
 
 let booking = ref()
 
-let QRCodeUrl = computed(() => booking.value ? window.location.host + '/reservas/' + booking.value.id : null)
+let QRCodeUrl = computed(() => booking.value ? 'https://' + window.location.host + '/reservas/' + booking.value.id : null)
 
 onMounted(async () => {
     initLocale()
