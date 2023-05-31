@@ -12,8 +12,6 @@ let movie = ref({
     synopsis : null,
     image : null,
     slug: '',
-    released_at: new Date(),
-    ended_at: null,
 })
 
 const submit = async () => {
@@ -25,8 +23,6 @@ const submit = async () => {
         year: movie.value.year,
         genre: movie.value.genre,
         synopsis: movie.value.synopsis,
-        released_at: movie.value.released_at,
-        ended_at: movie.value.ended_at,
       })
       .select()
   
@@ -40,6 +36,15 @@ const submit = async () => {
       newMovie.slug = generateAndSaveSlug(newMovie)
 
       emit('createMovie', newMovie)
+
+      movie.value = {
+        title : '',
+        year : null,
+        genre : '',
+        synopsis : null,
+        image : null,
+        slug: '',
+      }
     }
   }
 
@@ -115,6 +120,6 @@ const slugify = (text) => {
     <div class="flex flex-col gap-3">
       <h1 class="text-3xl">Formulario</h1>
       <FormMovie v-model="movie" />
-      <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3 mx-auto" @click="submit">Enviar</button>
+      <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-64" @click="submit">Enviar</button>
     </div>
 </template>

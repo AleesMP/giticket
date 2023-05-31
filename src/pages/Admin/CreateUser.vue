@@ -39,7 +39,7 @@ const registerUser = async () => {
 </script>
 
 <template>
-  <div v-if="props.store.currentUser" class="flex flex-col gap-8 text-white p-4">
+  <div v-if="props.store.currentUser" class="flex flex-col gap-8 text-white px-4 py-8 max-w-screen-sm mx-auto">
     <div class="flex flex-col gap-4">
             <h2 class="text-white text-2xl">Registrar usuario</h2>
             <div class="flex flex-col gap-2">

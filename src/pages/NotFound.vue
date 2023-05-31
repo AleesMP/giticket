@@ -8,9 +8,8 @@ const goToHome = () => {
 }
 </script>
 <template>
-    <div class="text-white">
+    <div class="flex flex-col gap-8 text-center text-white p-8">
         <h1 class="text-4xl">No se ha encontrado la página</h1>
-        <h2 class="text-2xl">Error 404</h2>
         <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3 mx-auto" @click="goToHome">Volver a la home</button>
     </div>
 </template>

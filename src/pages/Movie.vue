@@ -28,7 +28,7 @@ onMounted(async () => {
 
     movie.value = await fetchMovieBySlug(route.params.movieSlug)
 
-    availableDates.value = calculateAvailableDates(new Date(movie.value.released_at))
+    availableDates.value = calculateAvailableDates()
     selectedDate.value = availableDates.value[0].datetime
     
     selectedHour.value = availableHours.value[0]
@@ -52,10 +52,10 @@ const initLocale = () => {
     setDefaultOptions({ locale: locale })
 }
 
-const calculateAvailableDates = (releaseDate) => {
+const calculateAvailableDates = () => {
     const MAX_DAYS = 5
     const todayDate = new Date()
-    const startDate = isBefore(todayDate, releaseDate) ? releaseDate : todayDate
+    const startDate = todayDate
     const endDate = addDays(startDate, MAX_DAYS)
 
     return eachDayOfInterval({ start: startDate, end: endDate }).map((date) => {
@@ -127,13 +127,12 @@ const bookMovie = async () => {
 const goBack = () => {
     router.push('/')
 }
-
 </script>
 <template>
-    <div v-if="movie" class="flex flex-col gap-4 p-8 text-white">
+    <div v-if="movie" class="flex flex-col gap-8 p-8 text-white">
         <div class="text-4xl">{{ movie.title }}</div>
-        <div class="flex flex-row gap-4">
-            <img class="w-64 rounded-md" :src="supabaseStorageUrl + movie.image" :alt="`${movie.title} - Imagen`">
+        <div class="flex flex-col gap-4 md:flex-row">
+            <img class="w-64 object-contain rounded-md self-center" :src="supabaseStorageUrl + movie.image" :alt="`${movie.title} - Imagen`">
             <div class="flex flex-wrap mx-2">
                 <div class="flex flex-col p-2">
                     <div>
@@ -151,32 +150,32 @@ const goBack = () => {
                 </div>
             </div>
         </div>
-        <form class="flex flex-col p-5 border rounded-md border-slate-600 gap-3" @submit.prevent="bookMovie">
-            <div class="flex gap-4 items-center">
+        <form class="flex flex-col p-5 border rounded-md border-slate-600 gap-4 md:max-w-screen-sm" @submit.prevent="bookMovie">
+            <div class="flex flex-col gap-4 justify-between md:flex-row md:items-center">
                 <label for="selectedDate">Listado de días</label>
-                <select class="bg-slate-600 rounded px-2 py-1" name="selectedDate" v-model="selectedDate">
+                <select class="bg-slate-600 rounded px-2 py-1 w-full md:w-72" name="selectedDate" v-model="selectedDate">
                     <option v-for="availableDate in availableDates" :key="availableDate.datetime"
                         :value="availableDate.datetime">{{ availableDate.label }}</option>
                 </select>
             </div>
-            <div class="flex gap-4 items-center">
+            <div class="flex flex-col gap-4 justify-between md:flex-row md:items-center">
                 <div>Listado de horas</div>
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2">
                     <div v-for="availableHour in availableHours" :key="availableHour" :value="availableHour"
                         class="inline-flex justify-center items-center p-1.5 bg-slate-600 rounded cursor-pointer"
                         :class="{ 'bg-slate-800': availableHour === selectedHour }" @click="selectedHour = availableHour">{{
                             availableHour }}</div>
                 </div>
             </div>
-            <div class="flex gap-4 items-center">
+            <div class="flex flex-col gap-4 justify-between md:flex-row md:items-center">
                 <label for="bookingEmail">Dirección de correo electrónico</label>
-                <input class="bg-slate-600 rounded px-2 py-1" v-model="bookingEmail" name="bookingEmail" type="email"
+                <input class="bg-slate-600 rounded px-2 py-1 w-full md:w-72" v-model="bookingEmail" name="bookingEmail" type="email"
                     placeholder="ejemplo@ejemplo.com" required />
             </div>
-
-            <button type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>
+            <div v-if="bookingUrl">✅ Se ha reservado correctamente. En breves recibirás un correo eléctronico con los datos de la reserva.</div>
+            <button v-else type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>
         </form>
 
-        <button class="px-4 py-2 rounded font-semibold bg-slate-600 w-1/3" @click="goBack">Ir atras</button>
+        <button class="px-4 py-2 rounded font-semibold bg-slate-600 w-48" @click="goBack">Ir atras</button>
     </div>
 </template>

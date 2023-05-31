@@ -6,6 +6,7 @@ const supabaseStorageUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL
 let movies = ref([])
 let searchText = ref('')
 let selectedGenre = ref([])
+let showGenreFilters = ref(true)
 
 const allGenres = computed(() => {
     return movies.value.map((movie) => movie.genre).filter((tmpGenre, index, tmpGenres) => tmpGenre.length && tmpGenres.indexOf(tmpGenre) == index)
@@ -38,18 +39,24 @@ const fetchMovies = async () => {
 <template>
     <div class="py-8">
         <div class="flex flex-col gap-6 px-6">
-            <div class="flex gap-4 justify-center">
-                <input v-model="searchText" type="text" placeholder="Buscar por título" class="rounded-md lg:w-2/12 bg-gray-100 pl-2">
-                <div v-for="genre in allGenres" class="flex gap-2 text-white">
-                    <input v-model="selectedGenre" type="checkbox" :value="genre">
-                    <label>{{ genre }}</label>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <input v-model="searchText" type="text" placeholder="Buscar por título" class="rounded-md bg-gray-100 pl-2 w-2/3 md:w-1/3">
+                <button class="flex gap-2 items-center justify-center text-white bg-slate-600 rounded w-44 py-1 md:hidden" @click="showGenreFilters = !showGenreFilters">
+                    <span>Filtrar por género</span>
+                    <font-awesome-icon :icon="['fas', showGenreFilters ? 'chevron-down' : 'chevron-up']" class="text-xs" />
+                </button>
+                <div v-if="showGenreFilters" class="flex flex-col md:flex-row gap-x-3">
+                    <div v-for="genre in allGenres" class="flex gap-2 text-white">
+                        <input v-model="selectedGenre" type="checkbox" :value="genre">
+                        <label>{{ genre }}</label>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-wrap">
-                <div v-for="movie in filteredMovies" :key="movie.id" class="flex w-1/6 p-2">
-                    <a :href="movie.slug" class="flex flex-col bg-blue-300 p-3 rounded-md cursor-pointer">
+                <div v-for="movie in filteredMovies" :key="movie.id" class="flex w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 p-2">
+                    <a :href="movie.slug" class="flex flex-col bg-blue-400 p-3 gap-2 rounded-md cursor-pointer">
                         <img class="rounded-md" :src="supabaseStorageUrl + movie.image">
-                        <div class="text-center p-1">{{ movie.title }}</div>
+                        <div class="text-center">{{ movie.title }}</div>
                     </a>
                 </div>
             </div>
