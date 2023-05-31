@@ -54,10 +54,12 @@ const fetchMovies = async () => {
             </div>
             <div class="flex flex-wrap">
                 <div v-for="movie in filteredMovies" :key="movie.id" class="flex w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 p-2">
-                    <a :href="movie.slug" class="flex flex-col bg-blue-400 p-3 gap-2 rounded-md cursor-pointer">
-                        <img class="rounded-md" :src="supabaseStorageUrl + movie.image">
-                        <div class="text-center">{{ movie.title }}</div>
-                    </a>
+                    <router-link :to="{ name: 'Movie', params: { movieSlug: movie.slug } }" class="flex flex-col bg-blue-400/60 p-3 gap-2 rounded-md hover:bg-blue-300/60 group">
+                        <div class="h-min overflow-hidden rounded-md">
+                            <img class="rounded-md group-hover:scale-110 transition-all duration-500" :src="supabaseStorageUrl + movie.image">
+                        </div>
+                        <div class="text-center font-semibold text-white leading-tight">{{ movie.title }}</div>
+                    </router-link>
                 </div>
             </div>
         </div>
