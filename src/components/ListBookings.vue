@@ -12,30 +12,29 @@ const fetchBookings = async () => {
   bookings.value = data;
 };
 
-const refreshBooking = async (bookingData) => {
+const validateBooking = async (bookingId) => {
   const { data, error } = await supabase
-    .from("bookings")
+    .from('bookings')
+    .update({ validated_at: new Date() })
+    .eq('id', bookingId)
     .select()
-    .eq("id", bookingData.id);
 
   if (error) {
-    console.log(error);
+    console.log(error)
   } else {
-    const bookingIndexToUpdate = bookings.value.indexOf(
-      (booking) => bookingData.id === booking.id
-    );
-    bookings.value[bookingIndexToUpdate] = data[0];
+    if (data) {
+      const bookingIndexToUpdate = bookings.value.findIndex(
+        (booking) => bookingId === booking.id
+      );
+      
+      bookings.value[bookingIndexToUpdate] = data[0];
+    }
   }
-};
+}
 
 onMounted(() => {
   // Recuperar las peliculas desde la bd supabase
   fetchBookings();
-});
-
-defineExpose({
-  fetchBookings,
-  refreshBooking,
 });
 </script>
 
@@ -64,7 +63,7 @@ defineExpose({
             Fecha de creación
           </th>
           <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-            Última actualización
+            Validación
           </th>
         </tr>
       </thead>
@@ -89,7 +88,8 @@ defineExpose({
             {{ new Date(booking.created_at).toISOString() }}
           </td>
           <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-            {{ new Date(booking.validated_at).toISOString() }}
+            <span v-if="booking.validated_at">{{ new Date(booking.validated_at).toISOString() }}</span>
+            <button v-else class="px-2 cursor-pointer bg-slate-600 rounded hover:bg-slate-500" @click="validateBooking(booking.id)">Validar</button>
           </td>
         </tr>
       </tbody>

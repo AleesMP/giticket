@@ -30,11 +30,6 @@ onMounted(() => {
   // Recuperar las peliculas desde la bd supabase
   fetchMovies()
 })
-
-defineExpose({
-  fetchMovies, refreshMovie
-})
-
 </script>
 
 <template>

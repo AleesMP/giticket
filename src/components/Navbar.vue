@@ -27,9 +27,12 @@ const logout = async () => {
             </a>
           </div>
           <div v-if="props.store.currentUser" class="flex items-center">
-            <div>
-              <!-- /admin temporal para poder ir rápido -->
-              <a href="/admin" class="text-white bg-orange-300 rounded p-3">{{ `${props.store.currentUser.user_metadata.name} (${props.store.currentUser.email})` }}</a>
+            <div class="flex items-center gap-4">
+              <router-link :to="{ name: 'AdminIndex' }" class="flex flex-col text-white rounded p-3">
+                <span class="text-center font-bold text-amber-400">{{ props.store.currentUser.user_metadata.name }}</span>
+                <span class="text-sm">{{ props.store.currentUser.email }}</span>
+              </router-link>
+              
               <button class="h-12 rounded font-semibold bg-orange-400 w-32 rounded text-white hover:bg-orange-500"
                 type="button" @click="logout">Desconectar</button>
             </div>

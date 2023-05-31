@@ -130,7 +130,7 @@ const goBack = () => {
 
 </script>
 <template>
-    <div v-if="movie" class="flex flex-col gap-4 p-8 text-white ">
+    <div v-if="movie" class="flex flex-col gap-4 p-8 text-white">
         <div class="text-4xl">{{ movie.title }}</div>
         <div class="flex flex-row gap-4">
             <img class="w-64 rounded-md" :src="supabaseStorageUrl + movie.image" :alt="`${movie.title} - Imagen`">
@@ -142,11 +142,11 @@ const goBack = () => {
                     </div>
                     <div>
                         <span>Año:</span>
-                        <div class="text-1xl p-2">{{ movie.year }}</div>
+                        <div class="text-xl p-2">{{ movie.year }}</div>
                     </div>
                     <div>
                         <span>Género:</span>
-                        <div class="text-1xl p-2">{{ movie.genre }}</div>
+                        <div class="text-xl p-2">{{ movie.genre }}</div>
                     </div>
                 </div>
             </div>

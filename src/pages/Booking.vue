@@ -3,6 +3,13 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { supabase } from '../services/supabase'
 import VueQrcode from '@chenfengyuan/vue-qrcode'
+import { setDefaultOptions, formatRelative } from 'date-fns'
+import { es } from 'date-fns/locale'
+
+
+const props = defineProps(['store'])
+
+const supabaseStorageUrl = import.meta.env.VITE_SUPABASE_STORAGE_URL
 
 const route = useRoute()
 
@@ -11,6 +18,8 @@ let booking = ref()
 let QRCodeUrl = computed(() => booking.value ? window.location.host + '/reservas/' + booking.value.id : null)
 
 onMounted(async () => {
+    initLocale()
+
     booking.value = await fetchBookingByUuid(route.params.bookingUuid)
 })
 
@@ -24,18 +33,94 @@ const fetchBookingByUuid = async (uuid) => {
         console.log(error)
     } else {
         if (data.length) {
-            return data[0]
+            let bookingTmp = data[0]
+
+            bookingTmp.movie = await fetchBookingMovie(bookingTmp.movie_id)
+
+            return bookingTmp
         } else {
             router.push('/404')
         }
     }
 }
 
+const fetchBookingMovie = async (movieId) => {
+    const { data, error } = await supabase
+        .from('movies')
+        .select()
+        .eq('id', movieId)
+
+    if (error) {
+        console.log(error)
+    } else {
+        return data.length ? data[0] : null
+    }
+}
+
+const validateBooking = async () => {
+  const { data, error } = await supabase
+    .from('bookings')
+    .update({ validated_at: new Date() })
+    .eq('id', booking.value.id)
+    .select()
+
+  if (error) {
+    console.log(error)
+  }
+}
+
+const initLocale = () => {
+  const formatRelativeLocale = {
+    lastWeek: "'el' eeee 'pasado,' dd 'de' MMMM",
+    yesterday: "'ayer,' dd 'de' MMMM",
+    today: "'hoy,' dd 'de' MMMM",
+    tomorrow: "'mañana,' dd 'de' MMMM",
+    nextWeek: "eeee',' dd 'de' MMMM",
+    other: "'el próximo' eeee',' dd 'de' MMMM",
+  }
+
+  const locale = {
+    ...es,
+    formatRelative: token => formatRelativeLocale[token]
+  }
+
+  setDefaultOptions({ locale: locale })
+}
 </script>
 <template>
-    <div v-if="booking" class="text-white">
-        <div>Este es el código QR que debes presentar en taquilla:</div>
-        <vue-qrcode v-if="QRCodeUrl" id="qr-code-img" :value="QRCodeUrl" tag="img" class="w-64 rounded"></vue-qrcode>
-        <div>Id: {{ booking.id }}</div>
+    <div v-if="booking" class="flex flex-col text-white p-8 gap-8">
+        <div class="text-3xl">Este es el código QR que debes presentar en taquilla</div>
+        <div class="flex items-center justify-around gap-4">
+            <div v-if="QRCodeUrl" class="flex flex-col gap-4">
+                <vue-qrcode id="qr-code-img" :value="QRCodeUrl" tag="img" class="w-72 h-72 rounded"></vue-qrcode>
+                <span v-if="booking.validated_at" class="text-center">✅ Validado {{ formatRelative(new Date(booking.validated_at), new Date()) }}</span>
+                <div class="text-center" v-else>
+                    <button v-if="props.store.currentUser" class="rounded py-1 px-4 font-bold bg-orange-500 hover:bg-orange-400" @click="validateBooking">Validar</button>
+                    <span v-else>Pendiente de validación</span>
+                </div>
+            </div>
+            <div v-if="booking.movie" class="flex flex-col rounded border border-slate-200 gap-4 p-4 w-2/3">
+                <div class="text-4xl">{{ booking.movie.title }}</div>
+                <div class="flex flex-row gap-4">
+                    <img class="w-64 rounded-md" :src="supabaseStorageUrl + booking.movie.image" :alt="`${booking.movie.title} - Imagen`">
+                    <div class="flex flex-wrap mx-2">
+                        <div class="flex flex-col p-2">
+                            <div>
+                                <span class="text-2xl">Sinopsis</span>
+                                <div class="text-xl p-2">{{ booking.movie.synopsis }}</div>
+                            </div>
+                            <div>
+                                <span class="text-2xl">Año</span>
+                                <div class="text-lg p-2">{{ booking.movie.year }}</div>
+                            </div>
+                            <div>
+                                <span class="text-2xl">Género</span>
+                                <div class="text-lg p-2">{{ booking.movie.genre }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
