@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^2.0.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/vue-fontawesome": "^3.0.3",
     "@plunk/node": "^1.1.1",
     "@supabase/supabase-js": "^2.21.0",
     "date-fns": "^2.30.0",

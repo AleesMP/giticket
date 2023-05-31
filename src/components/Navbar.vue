@@ -33,7 +33,7 @@ const logout = async () => {
                 <span class="text-sm">{{ props.store.currentUser.email }}</span>
               </router-link>
               
-              <button class="h-12 rounded font-semibold bg-orange-400 w-32 rounded text-white hover:bg-orange-500"
+              <button class="h-12 rounded font-semibold bg-orange-400 w-32 rounded text-white hover:bg-orange-300"
                 type="button" @click="logout">Desconectar</button>
             </div>
           </div>
