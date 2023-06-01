@@ -20,9 +20,9 @@ const routes = [
   { path: "/admin/movies/create", component: AdminMoviesCreate, name: 'AdminMoviesCreate' },
   { path: "/admin/movies/update", component: AdminMoviesUpdate, name: 'AdminMoviesUpdate' },
   { path: "/login", component: Login, name: 'Login' },
-  { path: "/404", component: NotFound, name: 'NotFound' },
   { path: "/reservas/:bookingUuid", component: Booking, name: 'Booking' },
-  { path: "/:movieSlug", component: Movie, name: 'Movie' }
+  { path: "/:movieSlug", component: Movie, name: 'Movie' },
+  { path: "/:pathMatch(.*)*", component: NotFound, name: 'NotFound' }
 ];
 
 const history = createWebHistory();
