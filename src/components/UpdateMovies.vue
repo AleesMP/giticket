@@ -3,6 +3,9 @@ import { onMounted, ref } from 'vue'
 import { supabase } from '../services/supabase'
 import DeleteMovie from './DeleteMovie.vue'
 import FormMovie from './FormMovie.vue';
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 let selectedMovie = ref(null)
 let movies = ref([])
@@ -27,9 +30,9 @@ const update = async (movie) => {
     .select()
 
   if (error) {
-    console.log(error)
+    toast.error('Error al actualizar la película')
   } else {
-    console.log('Se ha actualizado la siguiente movie -> ', data[0])
+    toast.success('Se ha actualizado la película correctamente')
 
     let newMovie = data[0]
     newMovie.image = selectedMovie.value.image

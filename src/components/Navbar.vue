@@ -1,6 +1,9 @@
 <script setup>
 import logo from "../assets/logo.svg"
 import { supabase } from '../services/supabase'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const props = defineProps(['store'])
 
@@ -8,9 +11,9 @@ const logout = async () => {
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    console.log(error)
+    toast.error('Error al cerrar la sesión')
   } else {
-    console.log('Se ha cerrado la sesión')
+    toast.success('Se ha cerrado sesión correctamente')
   }
 }
 </script>

@@ -1,4 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
@@ -12,7 +15,7 @@ const storeImage = async (movie) => {
         .upload(`public/${imageName}`, movie.image)
 
     if (error) {
-        console.log(error)
+        toast.error('Error al almacenar la película')
     } else {
         updateMovieImageUrl(imageName, movie.id)
     }
@@ -31,9 +34,9 @@ const updateMovieImageUrl = async (name, id) => {
         .select()
 
     if (error) {
-        console.log(error)
+        toast.error('Error al actualizar la imagen de la película')
     } else {
-        console.log('Se ha guardado la imagen de la movie -> ', data)
+        toast.success('Se ha guardado la imagen de la película ' + image.value.name + ' correctamente')
     }
 }
 

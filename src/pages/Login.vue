@@ -2,16 +2,16 @@
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
+import { useToast } from 'vue-toastification'
 
 const router = useRouter()
 const props = defineProps(['store'])
+const toast = useToast()
 
 const loginForm = ref({
     email: '',
     password: '',
 })
-
-const validationError = ref('')
 
 const login = async () => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -20,11 +20,10 @@ const login = async () => {
     })
 
     if (error) {
-        console.log(error)
-        validationError.value = 'Los datos introducidos no coinciden con nuestros registros'
+        toast.error('El email o contraseña son incorrectos')
     } else {
+        toast.success('¡Bienvenido/a ' + data.user.user_metadata.name + '!')
         router.replace('/admin')
-        console.log('Se ha iniciado sesión -> ', data)
     }
 }
 
@@ -34,9 +33,6 @@ watch(() => {
   }
 })
 
-const resetErrors = () => {
-    validationError.value = ''
-}
 </script>
 
 <template>
@@ -50,7 +46,6 @@ const resetErrors = () => {
             <label class="text-white" for="password">Password</label>
             <input class="bg-slate-600 rounded px-2 py-1" v-model="loginForm.password" name="password" type="password" @input="resetErrors" required />
         </div>
-        <div v-if="validationError" class="flex flex-col gap-2 text-red-400">{{ validationError }}</div>
         <div class="flex gap-8 justify-center">
             <button class="px-4 py-2 rounded font-semibold bg-slate-800 text-white" type="button" @click="login">Entrar</button>
         </div>

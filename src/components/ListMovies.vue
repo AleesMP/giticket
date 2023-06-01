@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { supabase } from '../services/supabase'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 let movies = ref([])
 const fetchMovies = async () => {
@@ -19,7 +22,7 @@ const refreshMovie = async (movieData) => {
     .eq('id', movieData.id)
 
   if (error) {
-    console.log(error)
+    toast.error('Error al listar las películas')
   } else {
     const movieIndexToUpdate = movies.value.indexOf((movie) => movieData.id === movie.id)
     movies.value[movieIndexToUpdate] = data[0]

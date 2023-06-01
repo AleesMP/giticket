@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { supabase } from "../services/supabase";
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 let bookings = ref([]);
 const fetchBookings = async () => {
@@ -20,7 +23,7 @@ const validateBooking = async (bookingId) => {
     .select()
 
   if (error) {
-    console.log(error)
+    toast.error('Error al listar las reservas')
   } else {
     if (data) {
       const bookingIndexToUpdate = bookings.value.findIndex(
@@ -28,6 +31,7 @@ const validateBooking = async (bookingId) => {
       );
       
       bookings.value[bookingIndexToUpdate] = data[0];
+      toast.success('Se ha validado la reserva correctamente')
     }
   }
 }

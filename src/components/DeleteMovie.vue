@@ -1,5 +1,8 @@
 <script setup>
 import { supabase } from '../services/supabase'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const props = defineProps({
   selectedMovie: Object
@@ -15,9 +18,9 @@ const deleteMovieById = async (id) => {
         .eq('id', id)
 
     if (error) {
-        console.log(error)
+        toast.error('Error al eliminar la película')
     } else {
-        console.log('Se ha eliminado la movie')
+        toast.success('Se ha eliminado la película correctamente')
         emit('deleteMovie')
     }
 }

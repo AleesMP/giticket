@@ -2,8 +2,10 @@
 import { ref } from 'vue'
 import { supabase } from '../services/supabase'
 import FormMovie from './FormMovie.vue'
+import { useToast } from 'vue-toastification'
 
 const emit = defineEmits(['createMovie'])
+const toast = useToast()
 
 let movie = ref({
     title : '',
@@ -27,9 +29,9 @@ const submit = async () => {
       .select()
   
     if (error) {
-      console.log(error)
+      toast.error('Error al dar de alta una película')
     } else {
-      console.log('Se ha creado la siguiente movie -> ', data[0])
+      toast.success('Se ha creado la película "' + movie.value.title + '" correctamente')
 
       let newMovie = data[0]
       newMovie.image = movie.value.image
@@ -62,7 +64,7 @@ const generateAndSaveSlug = async (movie) => {
     .eq('id', movie.id)
 
   if (error) {
-    console.log(error)
+    toast.error('Error al generar el slug')
   } else {
     return slug
   }
@@ -96,7 +98,7 @@ const checkIfSlugIsAvailable = async (slug) => {
     .eq('slug', slug)
 
   if (error) {
-    console.log(error)
+    toast.error('Error en el slug checking')
   } else {
     return !data.length
   }
@@ -120,6 +122,6 @@ const slugify = (text) => {
     <div class="flex flex-col gap-3">
       <h1 class="text-3xl">Formulario</h1>
       <FormMovie v-model="movie" />
-      <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-64" @click="submit">Enviar</button>
+      <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-64" type="button" @click="submit">Enviar</button>
     </div>
 </template>

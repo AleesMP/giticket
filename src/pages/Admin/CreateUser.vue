@@ -2,6 +2,9 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '../../services/supabase'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const router = useRouter()
 const props = defineProps(['store'])
@@ -31,9 +34,9 @@ const registerUser = async () => {
         }
     })
     if (error) {
-        console.log(error)
+        toast.error('Error al crear el usuario, compruebe que todos los datos introducidos sean correctos')
     } else {
-        console.log('Se ha registrado el usuario -> ', data)
+        toast.success('Usuario "' + newUser.value.name + '" creado correctamente')
     }
 }
 </script>

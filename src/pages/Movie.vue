@@ -3,8 +3,11 @@
 import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
 import { plunk, getBody } from '../services/plunk'
-import { setDefaultOptions, addDays, eachDayOfInterval, isBefore, format, formatRelative, isEqual } from 'date-fns'
+import { setDefaultOptions, addDays, eachDayOfInterval, format, formatRelative, isEqual } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const route = useRoute()
 const router = useRouter()
@@ -83,12 +86,13 @@ const fetchMovieBySlug = async (slug) => {
         .eq('slug', slug)
 
     if (error) {
-        console.log(error)
+        toast.error('Error al buscar la película')
+        router.push({ name: 'NotFound', params: { pathMatch: slug } })
     } else {
         if (data.length) {
             return data[0]
         } else {
-            router.push('/404')
+            router.push({ name: 'NotFound', params: { pathMatch: slug } })
         }
     }
 }
@@ -106,7 +110,7 @@ const bookMovie = async () => {
             .select()
 
         if (error) {
-            console.log(error)
+            toast.error('Error al reservar')
         } else {
             booking.value = data[0]
 

@@ -5,7 +5,9 @@ import { supabase } from '../services/supabase'
 import VueQrcode from '@chenfengyuan/vue-qrcode'
 import { setDefaultOptions, formatRelative } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 
 const props = defineProps(['store'])
 
@@ -30,7 +32,7 @@ const fetchBookingByUuid = async (uuid) => {
         .eq('id', uuid)
 
     if (error) {
-        console.log(error)
+        toast.error('Reserva no encontrada')
     } else {
         if (data.length) {
             let bookingTmp = data[0]
@@ -51,7 +53,7 @@ const fetchBookingMovie = async (movieId) => {
         .eq('id', movieId)
 
     if (error) {
-        console.log(error)
+        toast.error('Error al buscar la reserva')
     } else {
         return data.length ? data[0] : null
     }
@@ -65,7 +67,9 @@ const validateBooking = async () => {
     .select()
 
   if (error) {
-    console.log(error)
+    toast.error('Error al validar la reserva')
+  } else {
+    toast.success('Reserva validada correctamente')
   }
 }
 
