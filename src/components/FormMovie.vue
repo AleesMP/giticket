@@ -16,7 +16,10 @@ const movie = computed({
 })
 
 const setImage = (event) => {
-  movie.value.image = event.target.files[0] || null
+  let newMovieWithImage = { ...movie.value }
+
+  newMovieWithImage.image = event.target.files[0] || null
+  emit('update:modelValue', newMovieWithImage)
 }
 </script>
 

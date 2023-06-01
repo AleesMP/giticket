@@ -3,6 +3,9 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeImage } from '../../../services/supabase'
 import CreateMovie from '../../../components/CreateMovie.vue'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const router = useRouter()
 const props = defineProps(['store'])
@@ -16,6 +19,7 @@ onMounted(() => {
 })
 
 const handleCreateMovie = (data) => {
+    toast.success('Se ha creado la película "' + data.title + '" correctamente')
     storeImage(data)
 }
 </script>

@@ -8,16 +8,18 @@ const emit = defineEmits(['createMovie'])
 const toast = useToast()
 
 let movie = ref({
-    title : '',
-    year : null,
-    genre : '',
-    synopsis : null,
-    image : null,
-    slug: '',
+  title: '',
+  year: null,
+  genre: '',
+  synopsis: null,
+  image: null,
+  slug: '',
 })
 
 const submit = async () => {
-    // Enviar los datos a nuestra base de datos (supabase)
+  if (!movie.value.title || !movie.value.year || !movie.value.genre || !movie.value.synopsis || !movie.value.image) {
+    toast.error('Todos los campos son requeridos')
+  } else {
     const { data, error } = await supabase
       .from('movies')
       .insert({
@@ -27,12 +29,9 @@ const submit = async () => {
         synopsis: movie.value.synopsis,
       })
       .select()
-  
     if (error) {
       toast.error('Error al dar de alta una película')
     } else {
-      toast.success('Se ha creado la película "' + movie.value.title + '" correctamente')
-
       let newMovie = data[0]
       newMovie.image = movie.value.image
       newMovie.slug = generateAndSaveSlug(newMovie)
@@ -40,15 +39,16 @@ const submit = async () => {
       emit('createMovie', newMovie)
 
       movie.value = {
-        title : '',
-        year : null,
-        genre : '',
-        synopsis : null,
-        image : null,
+        title: '',
+        year: null,
+        genre: '',
+        synopsis: null,
+        image: null,
         slug: '',
       }
     }
   }
+}
 
 const generateAndSaveSlug = async (movie) => {
   let slug = slugify(movie.title)
@@ -73,13 +73,13 @@ const generateAndSaveSlug = async (movie) => {
 const regenerateSlug = async (slug, index = 2) => {
   const splitSlug = slug.split('-')
   const parsedLastItem = parseInt(splitSlug[splitSlug.length - 1])
-  
+
   // Mirar si el último item del slug es un número
   if (!isNaN(parsedLastItem)) {
     index = parsedLastItem + 1
     let popped = splitSlug.pop()
   }
-  
+
   const newSlug = slugify(splitSlug.join('-') + '-' + index)
 
   const isAvailable = await checkIfSlugIsAvailable(newSlug)
@@ -112,16 +112,16 @@ const slugify = (text) => {
     .trim()                       // Remove whitespace from both sides of a string (optional)
     .replace(/\s+/g, '-')         // Replace spaces with -
     .replace(/[^\w\-]+/g, '')     // Remove all non-word chars
-    .replace(/\_/g,'-')           // Replace _ with -
+    .replace(/\_/g, '-')           // Replace _ with -
     .replace(/\-\-+/g, '-')       // Replace multiple - with single -
     .replace(/\-$/g, '');         // Remove trailing -
 }
 </script>
 
 <template>
-    <div class="flex flex-col gap-3">
-      <h1 class="text-3xl">Formulario</h1>
-      <FormMovie v-model="movie" />
-      <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-64" type="button" @click="submit">Enviar</button>
-    </div>
+  <div class="flex flex-col gap-3">
+    <h1 class="text-3xl">Formulario</h1>
+    <FormMovie v-model="movie" />
+    <button class="px-4 py-2 rounded font-semibold bg-slate-800 w-64" type="button" @click="submit">Enviar</button>
+  </div>
 </template>

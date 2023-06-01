@@ -35,7 +35,7 @@ const registerUser = async () => {
     })
 
     if (!newUser.value.name || !newUser.value.email || !newUser.value.password) {
-        toast.error('Todos los campos deben de estar rellenados')
+        toast.error('Todos los campos son requeridos')
     } else {
         if (error) {
             toast.error('Error al crear el usuario. Compruebe que todos los datos introducidos sean correctos')
