@@ -33,10 +33,15 @@ const registerUser = async () => {
             }
         }
     })
-    if (error) {
-        toast.error('Error al crear el usuario, compruebe que todos los datos introducidos sean correctos')
+
+    if (!newUser.value.name || !newUser.value.email || !newUser.value.password) {
+        toast.error('Todos los campos deben de estar rellenados')
     } else {
-        toast.success('Usuario "' + newUser.value.name + '" creado correctamente')
+        if (error) {
+            toast.error('Error al crear el usuario. Compruebe que todos los datos introducidos sean correctos')
+        } else {
+            toast.success('Usuario "' + newUser.value.name + '" creado correctamente')
+        }
     }
 }
 </script>
