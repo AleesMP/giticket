@@ -1,5 +1,5 @@
 <script setup>
- import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { supabase } from '../services/supabase'
 import { plunk, getBody } from '../services/plunk'
@@ -176,10 +176,10 @@ const goBack = () => {
                 <input class="bg-slate-600 rounded px-2 py-1 w-full md:w-72" v-model="bookingEmail" name="bookingEmail" type="email"
                     placeholder="ejemplo@ejemplo.com" required />
             </div>
-            <div v-if="bookingUrl">✅ Se ha reservado correctamente. En breves recibirás un correo eléctronico con los datos de la reserva.</div>
+            <div v-if="bookingUrl">✅ Se ha reservado correctamente. En breves recibirás un correo electronico con los datos de la reserva.</div>
             <button v-else type="submit" class="px-4 py-2 rounded font-semibold bg-slate-800 w-1/3">Reservar</button>
         </form>
 
-        <button class="px-4 py-2 rounded font-semibold bg-slate-600 w-48" @click="goBack">Ir atras</button>
+        <button class="px-4 py-2 rounded font-semibold bg-slate-600 w-48" @click="goBack">Ir atrás</button>
     </div>
 </template>

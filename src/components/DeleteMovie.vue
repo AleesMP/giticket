@@ -8,8 +8,8 @@ const props = defineProps({
   selectedMovie: Object
 })
 
+// evento personalizado
 const emit = defineEmits(['deleteMovie'])
-
 const deleteMovieById = async (id) => {
     // Eliminamos la película de la bd
     const { error } = await supabase

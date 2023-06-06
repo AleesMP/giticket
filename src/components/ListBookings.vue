@@ -49,49 +49,25 @@ onMounted(() => {
       <table v-if="bookings" class="w-full">
         <thead>
           <tr>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              UUID
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              ID película
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              Email
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              Fecha seleccionada
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              Hora seleccionada
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              Fecha de creación
-            </th>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">
-              Validación
-            </th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">ID reserva</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">ID película</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Email</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Fecha seleccionada</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Hora seleccionada</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Fecha de creación</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Validación</th>
           </tr>
         </thead>
-        <tbody class="bg-white dark:bg-slate-800">
+        <tbody class="bg-slate-800">
           <tr v-for="booking in bookings" :key="booking.id">
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <router-link :to="{ name: 'Booking', params: { bookingUuid: booking.id } }" class="hover:underline">{{ booking.id }}</router-link>
             </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              {{ booking.movie_id }}
-            </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              {{ booking.email }}
-            </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              {{ booking.selected_date }}
-            </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              {{ booking.selected_hour }}
-            </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              {{ new Date(booking.created_at).toISOString() }}
-            </td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.movie_id }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.email }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.selected_date }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.selected_hour }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ new Date(booking.created_at).toISOString() }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <span v-if="booking.validated_at">{{ new Date(booking.validated_at).toISOString() }}</span>
               <button v-else class="px-2 cursor-pointer bg-slate-600 rounded hover:bg-slate-500" @click="validateBooking(booking.id)">Validar</button>
@@ -99,7 +75,9 @@ onMounted(() => {
           </tr>
         </tbody>
       </table>
-      <div v-else>No hay ninguna reserva.</div>
+      <div v-else>
+        <h1>No hay ninguna reserva.</h1>
+      </div>
     </div>
   </div>
 </template>

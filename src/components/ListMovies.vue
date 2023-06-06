@@ -42,7 +42,7 @@ onMounted(() => {
       <table v-if="movies" class="w-full">
         <thead>
           <tr>
-            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">UUID</th>
+            <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">ID</th>
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Titulo</th>
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Año</th>
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Genero</th>
@@ -51,7 +51,7 @@ onMounted(() => {
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Última actualización</th>
           </tr>
         </thead>
-        <tbody class="bg-white dark:bg-slate-800">
+        <tbody class="bg-slate-800">
           <tr v-for="movie in movies" :key="movie.id">
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <router-link :to="{ name: 'Movie', params: { movieSlug: movie.slug } }" class="hover:underline">{{ movie.id }}</router-link>
