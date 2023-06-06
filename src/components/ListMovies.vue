@@ -5,7 +5,7 @@ import { useToast } from 'vue-toastification'
 
 const toast = useToast()
 
-let movies = ref([])
+let movies = ref(null)
 const fetchMovies = async () => {
   const { data, error } = await supabase
     .from('movies')
@@ -51,7 +51,7 @@ onMounted(() => {
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Última actualización</th>
           </tr>
         </thead>
-        <tbody class="bg-slate-800">
+        <tbody v-if="movies.length" class="bg-slate-800">
           <tr v-for="movie in movies" :key="movie.id">
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <router-link :to="{ name: 'Movie', params: { movieSlug: movie.slug } }" class="hover:underline">{{ movie.id }}</router-link>
@@ -60,14 +60,18 @@ onMounted(() => {
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.year }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.genre }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ movie.synopsis }}</td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.created_at)).toISOString() }}
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.created_at)).toLocaleString() }}
             </td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.updated_at)).toISOString() }}
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(movie.updated_at)).toLocaleString() }}
             </td>
           </tr>
         </tbody>
+        <tbody v-else class="bg-slate-800">
+          <tr>
+            <td colspan="7" class="border-b border-slate-700 p-4 pl-8 text-slate-400">No hay ninguna película.</td>
+          </tr>
+        </tbody>
       </table>
-      <div v-else>No hay ninguna película.</div>
     </div>
   </div>
 </template>

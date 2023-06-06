@@ -5,7 +5,7 @@ import { useToast } from 'vue-toastification'
 
 const toast = useToast()
 
-let bookings = ref([]);
+let bookings = ref(null);
 const fetchBookings = async () => {
   const { data, error } = await supabase
     .from("bookings")
@@ -58,7 +58,7 @@ onMounted(() => {
             <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-200 text-left">Validación</th>
           </tr>
         </thead>
-        <tbody class="bg-slate-800">
+        <tbody v-if="bookings.length" class="bg-slate-800">
           <tr v-for="booking in bookings" :key="booking.id">
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <router-link :to="{ name: 'Booking', params: { bookingUuid: booking.id } }" class="hover:underline">{{ booking.id }}</router-link>
@@ -67,17 +67,19 @@ onMounted(() => {
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.email }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.selected_date }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ booking.selected_hour }}</td>
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ new Date(booking.created_at).toISOString() }}</td>
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">{{ (new Date(booking.created_at)).toLocaleString() }}</td>
             <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              <span v-if="booking.validated_at">{{ new Date(booking.validated_at).toISOString() }}</span>
+              <span v-if="booking.validated_at">{{ (new Date(booking.validated_at)).toLocaleString() }}</span>
               <button v-else class="px-2 cursor-pointer bg-slate-600 rounded hover:bg-slate-500" @click="validateBooking(booking.id)">Validar</button>
             </td>
           </tr>
         </tbody>
+        <tbody v-else class="bg-slate-800">
+          <tr>
+            <td colspan="7" class="border-b border-slate-700 p-4 pl-8 text-slate-400">No hay ninguna reserva.</td>
+          </tr>
+        </tbody>
       </table>
-      <div v-else>
-        <h1>No hay ninguna reserva.</h1>
-      </div>
     </div>
   </div>
 </template>
