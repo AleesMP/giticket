@@ -1,6 +1,7 @@
 # Giticket
-[https://aleesmp-giticket.netlify.app](https://aleesmp-giticket.netlify.app)
-
+🔗 [https://aleesmp-giticket.netlify.app](https://aleesmp-giticket.netlify.app)
+> [!NOTE]
+> **Puede que al intentar acceder el proyecto se encuentre pausado**
 
 Este documento te ayudará a preparar el entorno de desarrollo de este proyecto, el cual utiliza Vue 3 y Vite.
 
