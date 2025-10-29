@@ -31,6 +31,19 @@ onMounted(async () => {
 <template>
   <div>
     <Navbar v-model:store="store" />
-    <router-view v-model:store="store" />
+    <div v-if="error" class="error-message">
+      <h2>🚧 Problemas técnicos</h2>
+      <p>El servicio no está disponible temporalmente.</p>
+    </div>
+    <router-view v-else v-model:store="store" />
   </div>
 </template>
+
+<style>
+.error-message {
+  text-align: center;
+  margin-top: 30vh;
+  font-family: sans-serif;
+  color: #555;
+}
+</style>
