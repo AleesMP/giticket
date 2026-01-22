@@ -53,8 +53,8 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="error" class="error-message">
-      <h2>🚧 Problemas técnicos</h2>
-      <p>El servicio de base de datos no está disponible temporalmente.</p>
+      <h2>🚧 Problemas técnicos 🚧</h2>
+      <p>La base de datos está temporalmente inactiva</p>
     </div>
 
     <router-view v-else v-model:store="store" />
